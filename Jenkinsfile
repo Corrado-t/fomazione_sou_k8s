@@ -1,23 +1,21 @@
 def buildAndPushTag(Map args) {
     def defaults = [
-        registryUrl: "corradot93/fomazione_sou_k8s",  
+        registryUrl: "https://registry.hub.docker.com",  
         dockerfileDir: "./",
         dockerfileName: "Dockerfile",
         buildArgs: "",
         pushLatest: true
     ]
     args = defaults + args
-    echo 'buildin image'
     
-    def dockerImage = docker.build "${DOCKER_REGISTRY}" + ":${buildTag}"
+    //def dockerImage = docker.build "${DOCKER_REGISTRY}" + ":${buildTag}"
 
-    echo 'called Pushing image'
+    echo 'Loggin in registry'
     docker.withRegistry(args.registryUrl, registryCredential) {
-        //dockerImage = docker.build registry + ":$BUILD_NUMBER"
-        //def image = docker.build(args.image, "${args.buildArgs} ${args.dockerfileDir} -f ${args.dockerfileName}")
+        echo 'buildin image'
+        def image = docker.build(args.image, "${args.buildArgs} ${args.dockerfileDir} -f ${args.dockerfileName}")
         echo 'Pushing image'
-        //image.push(args.buildTag)
-        dockerImage.push()
+        image.push(args.buildTag)
         if(args.pushLatest) {
             image.push("latest")
             sh "docker rmi --force ${args.image}:latest"
@@ -33,7 +31,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = "fomazione_sou_k8s" 
-        DOCKER_REGISTRY = "corradot93/fomazione_sou_k8s"  
+        DOCKER_USER = "corradot93"  
         registryCredential = 'dockerhub_id'
 
     }
@@ -73,7 +71,7 @@ pipeline {
                 script {
                     echo 'calling Pushing image'
                     buildAndPushTag(
-                        image: "${env.DOCKER_REGISTRY}/${env.IMAGE_NAME}",
+                        image: "${env.DOCKER_USER}/${env.IMAGE_NAME}",
                         buildTag: "${env.DOCKER_TAG}",
                         buildArgs: "",  // You can add any build arguments if needed
                         pushLatest: (env.DOCKER_TAG == 'latest') // Only push "latest" if the tag is "latest"
