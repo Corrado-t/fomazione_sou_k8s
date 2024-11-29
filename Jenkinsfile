@@ -79,6 +79,17 @@ pipeline {
                 }
             }
         }
+
+        stage('Using helm to install on kubernates cluster') {
+            steps {
+                script {
+                    echo 'Set kubeconfig'
+                    sh "export KUBECONFIG=/root/.kube/config"
+                    echo 'Run helm install'
+                    sh "helm upgrade --install flask-app ./flask-app-chart --set tag=${env.DOCKER_TAG}"
+                }
+            }
+        }        
     }
 
     post {
