@@ -86,7 +86,7 @@ pipeline {
                     echo 'Set kubeconfig'
                     sh "export KUBECONFIG=/root/.kube/config"
                     echo 'Run helm install'
-                    sh "helm upgrade --install --kubeconfig=/var/jenkins_home/kubeconfig flask-app ./flask-app-chart --kube-insecure-skip-tls-verify --set tag=${env.DOCKER_TAG} --debug"  
+                    sh "helm upgrade --install --kubeconfig=/var/jenkins_home/.kube/kubeconfig flask-app ./flask-app-chart --kube-insecure-skip-tls-verify --set tag=${env.DOCKER_TAG} --debug"  
                 }
             }
         }        
