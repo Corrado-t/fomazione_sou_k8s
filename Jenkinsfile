@@ -91,6 +91,20 @@ pipeline {
                 }
             }
         }        
+
+        stage('Post deploy test') {
+            steps {
+                script {
+                    echo 'install requirements'
+                    sh "python3 -m venv venv"
+                    sh ". venv/bin/activate"
+                    sh "pip3 install -r ./test/requirements.txt"
+
+                    echo 'Run Test'
+                    sh "python3 ./test/test.py"  
+                }
+            }
+        }      
     }
 
     post {
