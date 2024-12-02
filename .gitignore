@@ -37,6 +37,10 @@ indexing
 # Don't track workspaces (when users build on the master).
 jobs/**/*workspace
 
+#python3 env
+venv/
+.python-version
+
 # Security warning: If secrets are included with your configuration, then an
 # adversary will be able to decrypt all encrypted secrets within Jenkins
 # config.  Including secrets is a bad practice, but the example is included in
